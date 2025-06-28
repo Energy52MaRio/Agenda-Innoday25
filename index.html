@@ -112,6 +112,13 @@
             <p class="mt-2 text-lg md:text-xl text-indigo-200">Die Zukunft gestalten</p>
         </header>
         
+        <!-- Countdown Timer Section -->
+        <section class="container mx-auto px-6 pt-4 pb-8 text-center">
+             <div id="countdown-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto scroll-animate">
+                <!-- Countdown boxes will be injected by JS -->
+            </div>
+        </section>
+
         <section class="container mx-auto px-6 pb-8 text-center scroll-animate">
             <div class="glass-effect inline-block p-6 rounded-lg text-left">
                 <h2 class="text-2xl font-bold text-white mb-2 text-center">📍 Veranstaltungsort</h2>
@@ -181,6 +188,46 @@
         document.addEventListener('DOMContentLoaded', () => {
             const agendaContainer = document.getElementById('agenda-container');
             const faqContainer = document.getElementById('faq-container');
+            const countdownContainer = document.getElementById('countdown-container');
+
+            // --- Countdown Timer Logic ---
+            const targetDate = new Date('2025-07-04T09:00:00').getTime();
+
+            const countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    countdownContainer.innerHTML = `<div class="col-span-2 sm:col-span-4 text-2xl font-bold text-green-400">Der Innovationday hat begonnen!</div>`;
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownContainer.innerHTML = `
+                    <div class="glass-effect p-4 rounded-lg text-center">
+                        <div class="text-4xl md:text-5xl font-black text-indigo-300">${String(days).padStart(2, '0')}</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest">Tage</div>
+                    </div>
+                    <div class="glass-effect p-4 rounded-lg text-center">
+                        <div class="text-4xl md:text-5xl font-black text-indigo-300">${String(hours).padStart(2, '0')}</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest">Stunden</div>
+                    </div>
+                    <div class="glass-effect p-4 rounded-lg text-center">
+                        <div class="text-4xl md:text-5xl font-black text-indigo-300">${String(minutes).padStart(2, '0')}</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest">Minuten</div>
+                    </div>
+                    <div class="glass-effect p-4 rounded-lg text-center">
+                        <div class="text-4xl md:text-5xl font-black text-indigo-300">${String(seconds).padStart(2, '0')}</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest">Sekunden</div>
+                    </div>
+                `;
+            }, 1000);
+
 
             function getIconForType(type) {
                 const icons = { keynote: '🎤', workshop: '🛠️', talk: '🗣️', panel: '🤝', break: '☕', welcome: '👋', farewell: '🏁' };
