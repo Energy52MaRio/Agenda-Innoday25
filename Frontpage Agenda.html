@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovationday 2025 | WALTERFRIES Gruppe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a1a;
+            color: #e0e0e0;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .glass-effect {
+            background: rgba(16, 16, 32, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 2.5rem; /* Adjusted for alignment */
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #4f46e5;
+            border: 4px solid #1e1b4b;
+        }
+        .timeline-line {
+            position: absolute;
+            left: -21px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: rgba(79, 70, 229, 0.3);
+        }
+        .timeline-heading {
+            padding-left: 8px;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+        .timeline-heading h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #a5b4fc;
+        }
+        .header-logo {
+            font-weight: 900;
+            font-size: 2.5rem;
+            letter-spacing: 0.1em;
+            color: #ffffff;
+        }
+        .header-logo .ai-letter, .footer-logo .ai-letter {
+            color: #4ade80; /* A vibrant green */
+        }
+        /* Scroll Animation */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* FAQ Accordion */
+        .faq-item .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* Adjust as needed */
+        }
+        .faq-item .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="relative min-h-screen overflow-x-hidden">
+        <header class="container mx-auto px-6 py-8 text-center">
+            <div class="mb-8">
+                <div class="header-logo">M<span class="ai-letter">A</span>R<span class="ai-letter">I</span>O</div>
+                <p class="text-lg text-blue-400">AI for a better world</p>
+                <p class="text-sm text-gray-400">Euer AI Freak für alle Fälle :)</p>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 leading-tight">
+                Innovationday 2025
+            </h1>
+            <h2 class="mt-2 text-2xl md:text-3xl text-white font-semibold">WALTERFRIES Gruppe</h2>
+            <p class="mt-2 text-lg md:text-xl text-indigo-200">Die Zukunft gestalten</p>
+        </header>
+        
+        <section class="container mx-auto px-6 pb-8 text-center scroll-animate">
+            <div class="glass-effect inline-block p-6 rounded-lg text-left">
+                <h2 class="text-2xl font-bold text-white mb-2 text-center">📍 Veranstaltungsort</h2>
+                <p class="text-indigo-200 font-semibold">HP CoWorking Space</p>
+                <p class="text-gray-300">Babenhäuser Str. 50, Gebäude 2</p>
+                <p class="text-gray-300">63762 Großostheim</p>
+                <p class="text-gray-400 mt-2">Tel: +49 (0) 6026-6099744</p>
+                <p class="text-gray-400">E-Mail: info@hp-coworking-space.de</p>
+            </div>
+        </section>
+
+        <main class="container mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto">
+                <div id="agenda-container" class="relative">
+                    <div class="timeline-line"></div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- FAQ Section -->
+        <section class="container mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-8 text-indigo-300 scroll-animate">Häufig gestellte Fragen (FAQ)</h2>
+                <div id="faq-container" class="space-y-4">
+                    <!-- FAQ items will be injected here -->
+                </div>
+            </div>
+        </section>
+
+
+        <footer class="text-center py-8 mt-12">
+            <p class="text-sm text-gray-400 footer-logo">Powered by <span class="font-semibold text-white">M<span class="ai-letter">A</span>R<span class="ai-letter">I</span>O</span></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // --- Data ---
+        const agenda = [
+            { type: 'heading', title: 'Vormittag: KI-Horizonte erweitern – Von der Inspiration zur internen Anwendungsidee' },
+            { time: '09:00 - 09:15', type: 'welcome', title: 'Begrüßung: "Die KI-Revolution gestalten: Warum Empathie, Kreativität und kritisches Denken jetzt entscheidend sind."', role: 'Moderation', speaker: 'Walter Fries' },
+            { time: '09:15 - 09:30', type: 'talk', title: 'Impuls-Bild: Unsere Gedanken zum Start (interaktives Intro Spiel um Aufmerksamkeit zu üben)', role: 'Impuls von', speaker: 'Aise & Claus' },
+            { time: '09:30 - 09:50', type: 'keynote', title: 'Keynote - Aktuelle Entwicklungen rund um AI und warum jedes Unternehmen eine AI Strategie haben sollte', role: 'Speaker', speaker: 'Lisa & Mario' },
+            { time: '09:50 - 10:20', type: 'talk', title: 'Welche Tools nutzen wir im Unternehmen - aktueller Status und Ausblick', role: 'Experten', speaker: 'Madeleine, Nadia & David' },
+            { time: '10:20 - 11:05', type: 'workshop', title: 'Interaktive Erlebniswelt unter anderem im HR mit Metaverse (Meta Quest 3, Apple Vision Pro): Live-Einblicke und erste Schritte mit Kom4Tec', role: 'Live-Demo', speaker: 'Kom4Tec, Tobias Fischer und Louis Künzel' },
+            { time: '11:05 - 11:25', type: 'break', title: 'Kaffeepause', speaker: '' },
+            { time: '11:25 - 11:35', type: 'talk', title: 'Power Automate - automatische Erarbeitung einer eigenen M&A Database, Dynamics 365 neue Investorenübersicht', role: 'Präsentation', speaker: 'Bettina & Mario' },
+            { time: '11:35 - 12:20', type: 'workshop', title: 'ChatGPT Prompting Masterclass Course Teil Einführung', role: 'Workshopleitung', speaker: 'Mario' },
+            { time: '12:20 - 12:50', type: 'workshop', title: 'ChatGPT Prompting Masterclass Course Effektives Prompting mit ChatGPT - Maßgeschneidert für Fachexperten (Einsteiger & Fortgeschrittene)', role: 'Workshopleitung', speaker: 'Mario' },
+            { time: '12:50 - 13:50', type: 'break', title: 'Mittagessen (Catering)', speaker: '' },
+            { type: 'heading', title: 'Nachmittag: Werkzeuge für den Wandel – KI konkret anwenden und Ausblicke gewinnen' },
+            { time: '13:50 - 14:35', type: 'workshop', title: 'Team-Mission: ChatGPT Prompting Masterclass Course ChatGPT-Potenzial für unsere Fachbereiche entfesseln - Gruppenarbeit am Modell', role: 'Workshopleitung', speaker: 'Mario' },
+            { time: 'ab 14:35', type: 'talk', title: 'Logistik Park Rundgang mit Adventure Guide :)', role: 'Führung durch', speaker: 'Stefanie Wissler, CEO Wissler Group' },
+            { time: 'ca. 15:30', type: 'farewell', title: 'Ende der Veranstaltung', speaker: '' }
+        ];
+
+        const faqs = [
+            { question: 'Gibt es Parkmöglichkeiten vor Ort?', answer: 'Ja, es stehen ausreichend kostenfreie Parkplätze direkt am HP CoWorking Space zur Verfügung.' },
+            { question: 'Gibt es WLAN für die Teilnehmer?', answer: 'Ja, im IHP Park ist ein Gäste-WLAN vorhanden. Die Zugangsdaten erhalten Sie am Veranstaltungstag.' },
+            { question: 'Gibt es Möglichkeiten für Pausen im Freien?', answer: 'Ja, der angrenzende Logistik Park (IHP) bietet Möglichkeiten für Spaziergänge. Zudem gibt es dort WLAN und "Active Outdoor Sport"-Möglichkeiten.'},
+            { question: 'Ist für Verpflegung gesorgt?', answer: 'Absolut! Es gibt eine Kaffeepause am Vormittag und ein Mittagessen (Catering). Getränke stehen während der gesamten Veranstaltung zur Verfügung.' },
+            { question: 'Wen kann ich bei dringenden Fragen kontaktieren?', answer: 'Bei dringenden Fragen erreichen Sie Bettina & Mario unter der Handynummer XXX.' },
+            { question: 'Wo genau findet die Veranstaltung statt?', answer: 'Die Veranstaltung findet im Gebäude 2 des HP CoWorking Space statt. Bitte folgen Sie der Beschilderung am Eingang.' }
+        ];
+
+        // --- Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const agendaContainer = document.getElementById('agenda-container');
+            const faqContainer = document.getElementById('faq-container');
+
+            function getIconForType(type) {
+                const icons = { keynote: '🎤', workshop: '🛠️', talk: '🗣️', panel: '🤝', break: '☕', welcome: '👋', farewell: '🏁' };
+                return icons[type] || '🗓️';
+            }
+
+            // Render Agenda
+            agenda.forEach(item => {
+                const element = document.createElement('div');
+                element.classList.add('scroll-animate');
+
+                if (item.type === 'heading') {
+                    element.className = 'timeline-heading scroll-animate';
+                    element.innerHTML = `<h2>${item.title}</h2>`;
+                } else {
+                    element.className = 'relative pl-8 mb-8 timeline-item scroll-animate';
+                    element.innerHTML = `
+                        <div class="glass-effect p-6 rounded-lg">
+                            <p class="text-sm font-semibold text-indigo-400 mb-2">${item.time}</p>
+                            <h3 class="text-xl font-bold text-white mb-2">${getIconForType(item.type)} ${item.title}</h3>
+                            ${item.speaker ? `<p class="text-md text-gray-300"><span class="font-semibold text-indigo-300">${item.role}:</span> ${item.speaker}</p>` : ''}
+                        </div>
+                    `;
+                }
+                agendaContainer.appendChild(element);
+            });
+
+            // Render FAQs
+            faqs.forEach(faq => {
+                const faqItem = document.createElement('div');
+                faqItem.className = 'glass-effect rounded-lg faq-item scroll-animate';
+                faqItem.innerHTML = `
+                    <div class="faq-question flex justify-between items-center p-5 cursor-pointer">
+                        <h3 class="font-semibold text-white">${faq.question}</h3>
+                        <span class="text-2xl text-indigo-400 faq-toggle font-thin">+</span>
+                    </div>
+                    <div class="faq-answer px-5 pb-5">
+                        <p class="text-gray-300">${faq.answer}</p>
+                    </div>
+                `;
+                faqContainer.appendChild(faqItem);
+            });
+
+            // FAQ Accordion Logic
+            faqContainer.addEventListener('click', (e) => {
+                const questionHeader = e.target.closest('.faq-question');
+                if (questionHeader) {
+                    const faqItem = questionHeader.parentElement;
+                    faqItem.classList.toggle('active');
+                }
+            });
+
+            // Scroll Animation Logic
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.scroll-animate').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+
+        // --- Three.js Background Animation ---
+        let scene, camera, renderer, particles, lines;
+        let mouseX = 0, mouseY = 0;
+        const particleCount = 150;
+        const connectionDistance = 120;
+
+        function initThree() {
+            const canvas = document.getElementById('bg-canvas');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 300;
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const particleGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * window.innerWidth * 1.2;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * window.innerHeight * 1.2;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 600;
+                velocities.push(new THREE.Vector3((Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4));
+            }
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.velocities = velocities;
+
+            const particleMaterial = new THREE.PointsMaterial({ color: 0x4f46e5, size: 4, blending: THREE.AdditiveBlending, transparent: true, sizeAttenuation: true });
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * particleCount * 3);
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x4f46e5, transparent: true, opacity: 0.1 });
+            lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            animate();
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }
+        
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - window.innerWidth / 2) / 10;
+            mouseY = (event.clientY - window.innerHeight / 2) / 10;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Mouse interaction
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+
+            const positions = particles.geometry.attributes.position.array;
+            const velocities = particles.geometry.velocities;
+            const linePositions = lines.geometry.attributes.position.array;
+            let lineVertexIndex = 0;
+
+            const width = window.innerWidth / 2;
+            const height = window.innerHeight / 2;
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] += velocities[i].x;
+                positions[i * 3 + 1] += velocities[i].y;
+                positions[i * 3 + 2] += velocities[i].z;
+
+                if (Math.abs(positions[i * 3]) > width * 1.2) velocities[i].x *= -1;
+                if (Math.abs(positions[i * 3 + 1]) > height * 1.2) velocities[i].y *= -1;
+                if (Math.abs(positions[i * 3 + 2]) > 300) velocities[i].z *= -1;
+
+                for (let j = i + 1; j < particleCount; j++) {
+                    const dx = positions[i * 3] - positions[j * 3];
+                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+                    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (dist < connectionDistance) {
+                        linePositions[lineVertexIndex++] = positions[i * 3];
+                        linePositions[lineVertexIndex++] = positions[i * 3 + 1];
+                        linePositions[lineVertexIndex++] = positions[i * 3 + 2];
+                        linePositions[lineVertexIndex++] = positions[j * 3];
+                        linePositions[lineVertexIndex++] = positions[j * 3 + 1];
+                        linePositions[lineVertexIndex++] = positions[j * 3 + 2];
+                    }
+                }
+            }
+            
+            for (let i = lineVertexIndex; i < linePositions.length; i++) {
+                linePositions[i] = 0;
+            }
+
+            lines.geometry.attributes.position.needsUpdate = true;
+            particles.geometry.attributes.position.needsUpdate = true;
+            
+            renderer.render(scene, camera);
+        }
+
+        initThree();
+    </script>
+</body>
+</html>
