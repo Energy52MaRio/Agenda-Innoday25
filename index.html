@@ -67,6 +67,8 @@
         }
         .header-logo .ai-letter, .footer-logo .ai-letter {
             color: #4ade80; /* A vibrant green */
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
         }
         
         /* Title Animation */
@@ -80,6 +82,18 @@
         }
         .animate-glow {
             animation: glow 4s ease-in-out infinite;
+        }
+
+        /* Logo Pulse Animation */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 15px rgba(74, 222, 128, 1);
+            }
         }
 
         /* Scroll Animation */
