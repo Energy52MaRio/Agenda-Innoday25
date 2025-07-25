@@ -1,0 +1,5 @@
+{
+  "name": "Integra-Plan: Finanz-Simulator",
+  "description": "Ein KI-gestützter Simulator für die integrierte Unternehmens- und Finanzplanung. Laden Sie Bilder Ihrer Finanzberichte (GuV, Bilanz, Cashflow) hoch, um die Daten automatisch zu extrahieren und die Auswirkungen von Änderungen bei Marge, Kosten, Investitionen und mehr zu simulieren.",
+  "requestFramePermissions": []
+}
